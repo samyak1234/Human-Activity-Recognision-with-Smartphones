@@ -1,8 +1,16 @@
+# -*- coding: utf-8 -*-
+"""
+@author: Samyak Jain
+mail : samyakj@iitk.ac.in
+"""
+
+# -*- coding: utf-8 -*-
 
 import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn.svm import SVC
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
@@ -10,7 +18,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import plot_confusion_matrix, plot_roc_curve, plot_precision_recall_curve
 from sklearn.metrics import precision_score , recall_score
-
+from sklearn.manifold import TSNE
 def main():
 	st.title('Human Action Classifier')
 	st.sidebar.title('Perform Parameter Variation')
@@ -59,22 +67,51 @@ def main():
 	y_test = test.Activity
 	class_names = ['SITTING', 'STANDING', 'LAYING', 'WALKING', 'WALKING_DOWNSTAIRS', 'WALKING_UPSTAIRS']
 	
+	#visualisation
+	#st.sidebar.subheader('Visualise data in 2D')
+	st.cache(persist= True)
+	if st.sidebar.button('Visualize Data in 2D', key = 't-SNE'):
+		st.subheader('Dimensionality reduction to 2D using t-SNE')
+		X_for_tsne = df.drop(['subject', 'Activity'], axis = 1)
+		tsne = TSNE(random_state = 42, n_components=2, verbose=1, perplexity=50, n_iter=1000).fit_transform(X_for_tsne)
+		plt.figure(figsize=(12,8))
+		sns.scatterplot(x =tsne[:, 0], y = tsne[:, 1], hue = df['Activity'],palette='bright')
+		st.pyplot()
+
+	#choose classifier
 	st.sidebar.subheader('Choose Classifier')
 	classifier = st.sidebar.selectbox('Classifier', ('Logistic Regression (LR)', 'SVM' ,'Random Forest (RF)'))
 
+	############################################################################################
 	if classifier == 'Logistic Regression (LR)' :
 		st.sidebar.subheader('Model Hyperparameter')
 		C = st.sidebar.number_input('C (Regularization Parameter)', .01, 10.0, step=.01, key= 'C')
+		penalty = st.sidebar.radio('Penalty Function', ('l2', 'l1', 'elasticnet','none'), key='penalty')
+		l1_ratio = st.sidebar.number_input('l1 to l2 ratio  (if using elasticnet)',.01, .99, step = .01, key = 'l1 ratio')
+		#matrix to plot
+		metrics = st.sidebar.multiselect('What matrix to plot?', ('Confusion Matrix',))
+		# button for running the model
+		if st.sidebar.button('Classify', key = 'classify_lr'):
+			st.subheader('LR Results')
+			model = LogisticRegression(C=C, penalty=penalty, solver='saga', l1_ratio=l1_ratio)
+			model.fit(X_train, y_train)
+			accuracy = model.score(X_test, y_test)
+			y_pred = model.predict(X_test)
+			st.write('Accuracy: ', accuracy.round(2))
+			st.write('Precision: ', precision_score(y_test, y_pred, labels=class_names, average = 'macro').round(2))
+			st.write('Recall: ', recall_score(y_test, y_pred, labels=class_names, average = 'macro').round(2))
+			plot_metrics(metrics)
 
+	############################################################################################
 	
 	if classifier == 'SVM' :
 		C = st.sidebar.number_input('C (Regularization Parameter)', .01, 10.0, step=.01, key= 'C')
 		kernel = st.sidebar.radio('Kernel', ('rbf', 'linear'), key='kernel')
-		gamma = st.number_input('Gamma', .01, 1.0, step=.01, key= 'gamma')	
+		gamma = st.sidebar.number_input('Gamma', .01, 1.0, step=.01, key= 'gamma')	
 
-		metrics = st.sidebar.multiselect('What matrix to plot?', ('Confusion Matrix', 'ROC Curve', 'Precision-Recall Curve'))
-
-		if st.sidebar.button('Classify', key = 'classify'):
+		metrics = st.sidebar.multiselect('What matrix to plot?', ('Confusion Matrix',))
+		# button nfor running the model
+		if st.sidebar.button('Classify', key = 'classify_svm'):
 			st.subheader('SVM Results')
 			model = SVC(C=C, kernel=kernel, gamma=gamma)
 			model.fit(X_train, y_train)
@@ -85,17 +122,30 @@ def main():
 			st.write('Recall: ', recall_score(y_test, y_pred, labels=class_names, average = 'macro').round(2))
 			plot_metrics(metrics)
 
+	##################################################################################
 
+	if classifier == 'Random Forest (RF)' :
+		n_estimators = st.sidebar.number_input('Number of Trees', 1, 200, step=1, key= 'n_estimators')
+		max_depth = st.sidebar.number_input('The maximum depth of the tree', min_value = 2, max_value =20, step=1, key='max_depth')
+		
+		metrics = st.sidebar.multiselect('What matrix to plot?', ('Confusion Matrix',))
+
+		if st.sidebar.button('Classify', key = 'classify_rf'):
+			st.subheader('Random Forest Results')
+			model = RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth)
+			model.fit(X_train, y_train)
+			accuracy = model.score(X_test, y_test)
+			y_pred = model.predict(X_test)
+			st.write('Accuracy: ', accuracy.round(2))
+			st.write('Precision: ', precision_score(y_test, y_pred, labels=class_names, average = 'macro').round(2))
+			st.write('Recall: ', recall_score(y_test, y_pred, labels=class_names, average = 'macro').round(2))
+			plot_metrics(metrics)
+
+	##################################################################################
+	#raw data
 	if st.sidebar.checkbox('Show Raw data', False):
 		st.subheader('Mobile Sensors Dataset')
 		st.write(df)
-
-
-
-
-
-
-
 
 
 
