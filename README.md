@@ -15,3 +15,16 @@ The accuracies of other classifiers are as follows-
 
 ![Accuracies](https://github.com/samyak1234/Human-Activity-Recognision-with-Smartphones/blob/master/images/results12345.png)
 
+Data visualisation in 2D space using t-SME - 
+
+![2D](https://github.com/samyak1234/Human-Activity-Recognision-with-Smartphones/blob/master/images/2Dviz.png)
+
+Confusion matrix for Logistic Regression
+
+![CM_lr](https://github.com/samyak1234/Human-Activity-Recognision-with-Smartphones/blob/master/images/cm.png)
+
+
+
+
+
+
