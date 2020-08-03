@@ -2,7 +2,9 @@
 The Human Activity Recognition database was built from the recordings of 30 study participants performing activities of daily living (ADL) while carrying a waist-mounted smartphone with embedded inertial sensors. The objective is to classify activities into one of the six activities performed.
 More info on the data can be accessed [**here**](https://archive.ics.uci.edu/ml/datasets/human+activity+recognition+using+smartphones)
 
-This repo contain a jupyter notebook [**'mobile_data.ipynb'**](https://github.com/samyak1234/Human-Activity-Recognision-with-Smartphones/blob/master/mobile_data.ipynb) in which I performed **Data Visualisation**, **Data cleaning**, and **Hyperparameter tuning** for various classifiers which includes -
+Here is the [**link**](https://human-action-classifier.herokuapp.com/) for the Dashboard by which we can perform changing hyperparameters for classifiers and visualize data in 2D
+
+This repo also contains a jupyter notebook [**'mobile_data.ipynb'**](https://github.com/samyak1234/Human-Activity-Recognision-with-Smartphones/blob/master/mobile_data.ipynb) in which I performed **Data Visualisation**, **Data cleaning**, and **Hyperparameter tuning** for various classifiers which includes -
 
 - Logistic Regression
 - Linear SVM
