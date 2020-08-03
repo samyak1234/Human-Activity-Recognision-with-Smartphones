@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-@author: Samyak Jain
+@author: Samyak.Jain
 """
 
-# -*- coding: utf-8 -*-
 
 import streamlit as st
 import pandas as pd
