@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
-"""
-@author: Samyak.Jain
-"""
-
+'''
+'''
+'@host: samyak jain'
+'mail: samyaj@iitk.ac.in'
 
 import streamlit as st
 import pandas as pd
