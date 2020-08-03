@@ -13,3 +13,5 @@ This repo contain a jupyter notebook [**'mobile_data.ipynb'**](https://github.co
 The best results were given by **Linear SVM** with accuracy = 96.88 % 
 The accuracies of other classifiers are as follows-
 
+![Accuracies](https://github.com/samyak1234/Human-Activity-Recognision-with-Smartphones/blob/master/images/results12345.png)
+
